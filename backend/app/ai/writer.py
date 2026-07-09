@@ -29,12 +29,18 @@ class AIWriter:
     def write_chapter(
         self,
         title: str,
-        instruction: str
+        instruction: str,
+        style: str = "literárny",
+        tone: str = "pútavý"
     ):
 
         prompt = (
-            f"Napíš kapitolu s názvom: {title}\n\n"
-            f"Pokyny: {instruction}"
+            "Napíš kapitolu knihy.\n\n"
+            f"Názov kapitoly: {title}\n\n"
+            f"Štýl písania: {style}\n"
+            f"Tón textu: {tone}\n\n"
+            f"Pokyny autora:\n{instruction}\n\n"
+            "Text má byť vhodný pre skutočnú knihu."
         )
 
         return self.provider.generate(prompt)
