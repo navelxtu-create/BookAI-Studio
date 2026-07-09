@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.ai.writer import writer
 from app.db.session import get_db
 from app.models.chapter import Chapter
+from app.schemas.chapter import ChapterResponse
 
 
 router = APIRouter(
@@ -33,7 +34,10 @@ def create_outline(
     )
 
 
-@router.post("/chapter")
+@router.post(
+    "/chapter",
+    response_model=ChapterResponse
+)
 def create_chapter(
     request: ChapterRequest,
     db: Session = Depends(get_db)
