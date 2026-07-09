@@ -1,0 +1,32 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+    container_name: bookai-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      DATABASE_URL: postgresql+psycopg://bookai:bookai@db:5432/bookai
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    container_name: bookai-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: bookai
+      POSTGRES_USER: bookai
+      POSTGRES_PASSWORD: bookai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+volumes:
+  postgres_data:
+
