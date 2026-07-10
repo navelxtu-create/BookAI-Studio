@@ -8,6 +8,7 @@ class ProjectCreate(BaseModel):
 
 class ChapterShortResponse(BaseModel):
     id: int
+    project_id: int
     title: str
     content: str
 

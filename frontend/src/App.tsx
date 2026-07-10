@@ -1,25 +1,22 @@
 import { useEffect, useState } from "react";
 import api from "./services/api";
 
+import ProjectList from "./components/ProjectList";
+import ChapterList from "./components/ChapterList";
+import ChapterView from "./components/ChapterView";
 
-interface Chapter {
-  id: number;
-  title: string;
-  content: string;
-}
-
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  chapters: Chapter[];
-}
-
+import type { Project, Chapter } from "./types";
 
 function App() {
 
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] =
+    useState<Project[]>([]);
+
+  const [selectedProject, setSelectedProject] =
+    useState<Project | null>(null);
+
+  const [selectedChapter, setSelectedChapter] =
+    useState<Chapter | null>(null);
 
 
   useEffect(() => {
@@ -32,91 +29,128 @@ function App() {
       })
       .catch(error => {
 
-        console.error(
-          "Chyba načítania projektov:",
-          error
-        );
+        console.error(error);
 
       });
 
   }, []);
 
 
-
   return (
 
-    <div style={{
-      padding: "40px",
-      fontFamily: "Arial"
-    }}>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        fontFamily: "Arial"
+      }}
+    >
 
-      <h1>
+      <header
+        style={{
+          background: "#20232a",
+          color: "white",
+          padding: "15px 25px",
+          fontSize: "24px",
+          fontWeight: "bold"
+        }}
+      >
         📚 BookAI Studio
-      </h1>
+      </header>
 
 
-      <h2>
-        Moje knihy
-      </h2>
+      <div
+        style={{
+          flex: 1,
+          display: "grid",
+          gridTemplateColumns: "280px 280px 1fr",
+          overflow: "hidden"
+        }}
+      >
 
+        <div
+          style={{
+            borderRight: "1px solid #ddd",
+            padding: "20px",
+            overflowY: "auto"
+          }}
+        >
+          <ProjectList
+            projects={projects}
+            onSelect={(project) => {
 
+              setSelectedProject(project);
+              setSelectedChapter(null);
 
-      {
-        projects.map(project => (
-
-          <div
-            key={project.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "20px",
-              marginBottom: "20px",
-              borderRadius: "10px"
             }}
-          >
-
-            <h3>
-              📖 {project.title}
-            </h3>
+          />
+        </div>
 
 
-            <p>
-              {project.description}
-            </p>
+        <div
+          style={{
+            borderRight: "1px solid #ddd",
+            padding: "20px",
+            overflowY: "auto"
+          }}
+        >
+
+          {
+            selectedProject ? (
+
+              <ChapterList
+                project={selectedProject}
+                onSelect={setSelectedChapter}
+              />
+
+            ) : (
+
+              <p>Vyber knihu.</p>
+
+            )
+          }
+
+        </div>
 
 
-            <h4>
-              Kapitoly:
-            </h4>
+        <div
+          style={{
+            padding: "25px",
+            overflowY: "auto"
+          }}
+        >
 
+          {
+            selectedChapter ? (
 
-            <ul>
+              <ChapterView
+                chapter={selectedChapter}
+              />
 
-              {
-                project.chapters.map(chapter => (
+            ) : (
 
-                  <li key={chapter.id}>
+              <div>
 
-                    {chapter.title}
+                <h2>👋 Vitaj v BookAI Studio</h2>
 
-                  </li>
+                <p>
+                  Vyber kapitolu z ľavého panelu.
+                </p>
 
-                ))
-              }
+              </div>
 
-            </ul>
+            )
+          }
 
+        </div>
 
-          </div>
-
-        ))
-      }
-
+      </div>
 
     </div>
 
   );
 
 }
-
 
 export default App;
