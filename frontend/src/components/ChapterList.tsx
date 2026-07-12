@@ -1,6 +1,4 @@
-import { useState } from "react";
 import type { Project, Chapter } from "../types";
-import ChapterView from "./ChapterView";
 
 
 interface Props {
@@ -13,11 +11,6 @@ function ChapterList({
   project,
   onSelect
 }: Props) {
-
-
-  const [selectedChapter, setSelectedChapter] =
-    useState<Chapter | null>(null);
-
 
 
   return (
@@ -46,7 +39,6 @@ function ChapterList({
                 marginBottom: "8px"
               }}
               onClick={() => {
-                setSelectedChapter(chapter);
                 onSelect(chapter);
               }}
             >
@@ -59,18 +51,6 @@ function ChapterList({
         }
 
       </ul>
-
-
-
-      {
-        selectedChapter && (
-
-          <ChapterView
-            chapter={selectedChapter}
-          />
-
-        )
-      }
 
 
     </div>

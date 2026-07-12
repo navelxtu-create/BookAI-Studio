@@ -9,7 +9,6 @@ export async function generateChapter(
   const response = await api.post(
     "/ai/chapter",
     {
-      project_id: 1,
       title,
       instruction
     }
