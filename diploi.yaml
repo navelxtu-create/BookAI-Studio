@@ -1,0 +1,55 @@
+# This file is used to build the infrastructure for a deployment.
+# After editing something here, apply the changes on the Diploi dashboard.
+# For more information, see https://diploi.com/yaml
+
+diploiVersion: v1.0
+components:
+  - hosts:
+      - port: 8000
+        endpoint: true
+        name: Backend
+        identifier: app
+    name: FastAPI
+    identifier: fastapi
+    folder: /backend
+    package: https://github.com/diploi/component-fastapi#v0.136.1
+    containerCommands:
+      productionStart: >-
+        uv run --with uvicorn uvicorn app.main:app --host 0.0.0.0 --port 8000
+        --proxy-headers
+      developmentStart: >-
+        uv run --with uvicorn uvicorn app.main:app --host 0.0.0.0 --port 8000
+        --reload --reload-dir app
+    env:
+      include:
+        - postgres.DATABASE_URL
+        - value: '3.13'
+          name: PYTHON_VERSION
+        - value: changeme-replace-in-production
+          name: SECRET_KEY
+        - value: openai
+          name: AI_PROVIDER
+        - value: gpt-4.1-mini
+          name: OPENAI_MODEL
+  - hosts:
+      - port: 5173
+        endpoint: true
+        name: Frontend
+        identifier: app
+    name: React + Vite
+    identifier: react-vite
+    folder: /frontend
+    package: https://github.com/diploi/component-react-vite#v19.2.6
+    containerCommands:
+      productionStart: serve -s -l 5173 dist
+      developmentStart: npm run dev -- --host
+    env:
+      include:
+        - postgres.*
+        - fastapi.APP_ENDPOINT:VITE_API_URL
+        - value: .diploi.me
+          name: __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS
+addons:
+  - name: PostgreSQL
+    identifier: postgres
+    package: https://github.com/diploi/addon-postgres#v18.3-url
