@@ -2,81 +2,30 @@ import type { Project } from "../types";
 
 interface Props {
   projects: Project[];
+  selectedProjectId: number | null;
   onSelect: (project: Project) => void;
 }
 
-function ProjectList({
-  projects,
-  onSelect
-}: Props) {
-
+function ProjectList({ projects, selectedProjectId, onSelect }: Props) {
   return (
-
     <div>
+      <h2 className="panel-title">📚 Moje knihy</h2>
 
-      <h2
-        style={{
-          marginTop: 0
-        }}
-      >
-        📚 Moje knihy
-      </h2>
-
-      {
-        projects.map(project => (
-
-          <div
+      <div className="list-stack">
+        {projects.map((project) => (
+          <button
             key={project.id}
+            className={`card-button ${selectedProjectId === project.id ? "is-active" : ""}`}
             onClick={() => onSelect(project)}
-            style={{
-              background: "#f8f9fa",
-              border: "1px solid #ddd",
-              borderRadius: "10px",
-              padding: "15px",
-              marginBottom: "12px",
-              cursor: "pointer",
-              transition: "0.2s"
-            }}
           >
-
-            <h3
-              style={{
-                margin: 0,
-                marginBottom: "8px"
-              }}
-            >
-              📖 {project.title}
-            </h3>
-
-            <p
-              style={{
-                margin: 0,
-                color: "#666",
-                fontSize: "14px"
-              }}
-            >
-              {project.description}
-            </p>
-
-            <div
-              style={{
-                marginTop: "10px",
-                fontSize: "13px",
-                color: "#999"
-              }}
-            >
-              📄 {project.chapters.length} kapitol
-            </div>
-
-          </div>
-
-        ))
-      }
-
+            <h3>📖 {project.title}</h3>
+            <p>{project.description || "Bez popisu"}</p>
+            <div className="card-meta">📄 {project.chapters.length} kapitol</div>
+          </button>
+        ))}
+      </div>
     </div>
-
   );
-
 }
 
 export default ProjectList;
